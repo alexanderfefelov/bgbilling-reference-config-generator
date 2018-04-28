@@ -120,7 +120,7 @@ object Main extends App {
 
           // Generate reference config
           //
-          val referenceConfFile = outputDirectory / s"$name ${version}_$buildNumber ${buildTime.replace(':', '.')}.conf"
+          val referenceConfFile = outputDirectory / s"$name ${version}_$buildNumber (${buildTime.replace(':', '.')}).conf"
           referenceConfFile.overwrite(bannerText(name, version, buildNumber, buildTime))
           for (keyElem <- keyElems.sortBy(_.key)) {
             referenceConfFile.appendLine(keyToText(keyElem))
@@ -154,9 +154,7 @@ object Main extends App {
       |# Type: ${keyElem.typ}
       |# Valid values: ${keyElem.valid}
       |# Default value: ${keyElem.default}
-      |#
-      |# ${helpToString(keyElem.help)}
-      |#
+      ${helpToText(keyElem.help)}
       |# ${keyElem.key} =
     """.stripMargin
   }
@@ -168,19 +166,24 @@ object Main extends App {
       |# Type: ${subKeyElem.typ}
       |# Valid values: ${subKeyElem.valid}
       |# Default value: ${subKeyElem.default}
-      |#
-      |# ${helpToString(subKeyElem.help)}
-      |#
+      ${helpToText(subKeyElem.help)}
       |# ${subKeyElem.mask} =
     """.stripMargin
   }
 
-  private def helpToString(help: NodeSeq): String = {
-    Jsoup.parse(
+  private def helpToText(help: NodeSeq): String = {
+    val s = Jsoup.parse(
       StringEscapeUtils.unescapeHtml4(
         help.toString()
       )
-    ).text()
+    ).text().trim
+    if (!s.isEmpty) {
+      s"""|#
+        |# $s
+        |#"""
+    } else {
+      "|#"
+    }
   }
 
 }

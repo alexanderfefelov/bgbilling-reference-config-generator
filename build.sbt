@@ -26,6 +26,6 @@ libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.11.3"
 )
 
-assemblyJarName in assembly := s"${name.value}.jar"
+assemblyJarName in assembly := "brcg.jar"
 
 fork := true

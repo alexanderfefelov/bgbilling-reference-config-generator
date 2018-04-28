@@ -11,7 +11,7 @@ case class Config(
 
 object Config {
 
-  val parser = new OptionParser[Config](s"java -jar ${BuildInfo.name}.jar") {
+  val parser = new OptionParser[Config](s"java -jar brcg.jar") {
     head(s"${BuildInfo.name} v. ${BuildInfo.version}",
       """
         |

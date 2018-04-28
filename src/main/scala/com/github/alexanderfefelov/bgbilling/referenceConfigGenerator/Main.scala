@@ -41,6 +41,8 @@ object Main extends App {
           val fileName = jarFile.name.stripSuffix(".jar")
           val moduleName = if (fileName == "kernel") "server" else fileName
 
+          // Find and parse MODULE_NAME.properties
+          //
           val propertiesFile = tempDir / s"ru/bitel/bgbilling/properties/$moduleName.properties"
           if (!propertiesFile.exists) {
             println(s"$fileName.properties not found")
@@ -57,9 +59,8 @@ object Main extends App {
           }
           print(s"$name ${version}_$buildNumber $buildTime ... ")
 
-          val referenceConfFile = config.outputDir / s"$name ${version}_$buildNumber ${buildTime.replace(':', '.')}.conf"
-          referenceConfFile.overwrite(bannerText(name, version, buildNumber, buildTime))
-
+          // Find and parse config.xml
+          //
           var configXmlFile = tempDir / s"ru/bitel/bgbilling/modules/$name/server/config.xml"
           if (!configXmlFile.exists) {
             configXmlFile = tempDir / s"bitel/billing/server/$name/config.xml"
@@ -98,10 +99,14 @@ object Main extends App {
             subKeyElems += subKeyElem
           }
 
+          // Generate reference config
+          //
+          val referenceConfFile = config.outputDir / s"$name ${version}_$buildNumber ${buildTime.replace(':', '.')}.conf"
+          referenceConfFile.overwrite(bannerText(name, version, buildNumber, buildTime))
           for (keyElem <- keyElems.sortBy(_.key)) {
-            referenceConfFile.appendLine(keyText(keyElem))
+            referenceConfFile.appendLine(keyToText(keyElem))
             for (subKeyElem <- subKeyElems.filter(_.parentKey == keyElem.key).sortBy(_.mask)) {
-              referenceConfFile.appendLine(subKeyText(subKeyElem))
+              referenceConfFile.appendLine(subKeyToText(subKeyElem))
             }
           }
           referenceConfFile.appendLine("# ---[ EOF ]---")
@@ -124,20 +129,20 @@ object Main extends App {
     """.stripMargin
   }
 
-  private def keyText(keyElem: KeyElem) = {
+  private def keyToText(keyElem: KeyElem) = {
     s"""
       |# ---[ Key: ${keyElem.key} ]---
       |# Type: ${keyElem.typ}
       |# Valid values: ${keyElem.valid}
       |# Default value: ${keyElem.default}
       |#
-      |# ${helpToText(keyElem.help)}
+      |# ${helpToString(keyElem.help)}
       |#
       |# ${keyElem.key} =
     """.stripMargin
   }
 
-  private def subKeyText(subKeyElem: SubKeyElem) = {
+  private def subKeyToText(subKeyElem: SubKeyElem) = {
     s"""
       |# ---[ Sub-key: ${subKeyElem.mask} ]---
       |# Parent key: ${subKeyElem.parentKey}
@@ -145,13 +150,13 @@ object Main extends App {
       |# Valid values: ${subKeyElem.valid}
       |# Default value: ${subKeyElem.default}
       |#
-      |# ${helpToText(subKeyElem.help)}
+      |# ${helpToString(subKeyElem.help)}
       |#
       |# ${subKeyElem.mask} =
     """.stripMargin
   }
 
-  private def helpToText(help: NodeSeq) = {
+  private def helpToString(help: NodeSeq) = {
     Jsoup.parse(
       StringEscapeUtils.unescapeHtml4(
         help.toString()

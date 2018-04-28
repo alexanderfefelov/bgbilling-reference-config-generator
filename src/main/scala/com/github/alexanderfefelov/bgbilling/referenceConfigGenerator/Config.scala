@@ -1,17 +1,18 @@
 package com.github.alexanderfefelov.bgbilling.referenceConfigGenerator
 
-import better.files.Dsl._
+import java.io.File
+
 import scopt._
 import version._
 
 case class Config(
-  inputDir: String = pwd.pathAsString,
-  outputDir: String = pwd.pathAsString
+  inputDir: File = new File("."),
+  outputDir: File = new File(".")
 )
 
 object Config {
 
-  val parser = new OptionParser[Config](s"java -jar brcg.jar") {
+  val parser: OptionParser[Config] = new OptionParser[Config](s"java -jar brcg.jar") {
     head(s"${BuildInfo.name} v. ${BuildInfo.version}",
       """
         |
@@ -20,15 +21,17 @@ object Config {
         |This is free software, and you are welcome to redistribute it under certain conditions; see LICENSE file for details.
       """.stripMargin)
 
-    opt[String]('i', "input-directory")
+    opt[File]('i', "input-directory")
       .valueName("<directory>")
+      .required()
       .action((x, c) => c.copy(inputDir = x))
-      .text("Specifies directory containing BGBilling's kernel and modules .jar files. Default value: current directory")
+      .text("Specifies directory containing BGBilling's kernel and modules .jar files. This parameter is required")
 
-    opt[String]('o', "output-directory")
+    opt[File]('o', "output-directory")
       .valueName("<directory>")
-      .action((x, c) => c.copy(outputDir = x))
-      .text("Specifies output directory. Default value: current directory")
+      .required()
+      .action((x, c) => c.copy(outputDir =  x))
+      .text("Specifies output directory. This parameter is required")
 
     help("help").text("Prints this usage text")
   }

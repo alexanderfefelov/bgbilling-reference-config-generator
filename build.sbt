@@ -22,7 +22,8 @@ libraryDependencies ++= Seq(
   "com.github.scopt" %% "scopt" % "3.7.0",
   "com.github.pathikrit" %% "better-files" % "3.4.0",
   "org.scala-lang.modules" %% "scala-xml" % "1.1.0",
-  "org.apache.commons" % "commons-text" % "1.3"
+  "org.apache.commons" % "commons-text" % "1.3",
+  "org.jsoup" % "jsoup" % "1.11.3"
 )
 
 assemblyJarName in assembly := s"${name.value}.jar"

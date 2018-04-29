@@ -8,11 +8,11 @@ __bgbilling-reference-config-generator__ (далее __brcg__) -- это ген�
 
 * git <https://git-scm.com/downloads>
 * sbt <http://www.scala-sbt.org/>
-* Oracle JDK 8 <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
+* JDK 8
 
 Для выполнения необходимы:
 
-* Oracle JRE 8 <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
+* JRE 8
 
 ## Сборка из исходных кодов
 

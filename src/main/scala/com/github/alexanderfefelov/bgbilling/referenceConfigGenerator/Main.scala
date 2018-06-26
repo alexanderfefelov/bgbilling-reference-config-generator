@@ -155,7 +155,7 @@ object Main extends App {
       |# Valid values: ${keyElem.valid}
       |# Default value: ${keyElem.default}
       ${helpToText(keyElem.help)}
-      |# ${keyElem.key} =
+      |# ${keyElem.key}=
     """.stripMargin
   }
 
@@ -167,7 +167,7 @@ object Main extends App {
       |# Valid values: ${subKeyElem.valid}
       |# Default value: ${subKeyElem.default}
       ${helpToText(subKeyElem.help)}
-      |# ${subKeyElem.mask} =
+      |# ${subKeyElem.mask}=
     """.stripMargin
   }
 
